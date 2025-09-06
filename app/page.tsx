@@ -7,7 +7,11 @@ interface Todo {
   done: boolean;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://todo-1116-crud.vercel.app/";
+// ✅ BASE_URL untuk lokal & production
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "" // lokal pakai relative path
+    : process.env.NEXT_PUBLIC_BASE_URL; // di Vercel
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -21,6 +25,7 @@ export default function Home() {
 
   const limit = 5;
 
+  // 🔄 Fetch / refresh todos
   async function refresh(p = page) {
     setLoading(true);
     setError(null);
@@ -45,6 +50,7 @@ export default function Home() {
     refresh(1);
   }, []);
 
+  // ➕ Add todo
   async function addTodo(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim()) return;
@@ -63,12 +69,13 @@ export default function Home() {
     }
   }
 
-  async function toggle(id: string, done: boolean) {
+  // ✏️ Update title / toggle done
+  async function updateTodo(id: string, fields: { title?: string; done?: boolean }) {
     try {
       const res = await fetch(`${BASE_URL}/api/todos`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, done: !done }),
+        body: JSON.stringify({ id, ...fields }),
       });
       if (!res.ok) throw new Error("Failed to update todo");
       refresh();
@@ -78,6 +85,18 @@ export default function Home() {
     }
   }
 
+  async function toggle(id: string, done: boolean) {
+    await updateTodo(id, { done: !done });
+  }
+
+  async function saveEdit(id: string) {
+    if (!editTitle.trim()) return;
+    await updateTodo(id, { title: editTitle });
+    setEditId(null);
+    setEditTitle("");
+  }
+
+  // ❌ Remove todo
   async function remove(id: string) {
     try {
       const res = await fetch(`${BASE_URL}/api/todos`, {
@@ -90,24 +109,6 @@ export default function Home() {
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to delete todo");
-    }
-  }
-
-  async function saveEdit(id: string) {
-    if (!editTitle.trim()) return;
-    try {
-      const res = await fetch(`${BASE_URL}/api/todos`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, title: editTitle }),
-      });
-      if (!res.ok) throw new Error("Failed to update todo");
-      setEditId(null);
-      setEditTitle("");
-      refresh();
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Failed to update todo");
     }
   }
 
