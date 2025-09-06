@@ -7,6 +7,8 @@ interface Todo {
   done: boolean;
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://todo-1116-crud.vercel.app/";
+
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
@@ -23,7 +25,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/todos?page=${p}`);
+      const res = await fetch(`${BASE_URL}/api/todos?page=${p}`);
       if (!res.ok) throw new Error("Failed to fetch todos");
       const data = await res.json();
 
@@ -47,7 +49,7 @@ export default function Home() {
     e.preventDefault();
     if (!title.trim()) return;
     try {
-      const res = await fetch("/api/todos", {
+      const res = await fetch(`${BASE_URL}/api/todos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title }),
@@ -63,7 +65,7 @@ export default function Home() {
 
   async function toggle(id: string, done: boolean) {
     try {
-      const res = await fetch("/api/todos", {
+      const res = await fetch(`${BASE_URL}/api/todos`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, done: !done }),
@@ -78,7 +80,7 @@ export default function Home() {
 
   async function remove(id: string) {
     try {
-      const res = await fetch("/api/todos", {
+      const res = await fetch(`${BASE_URL}/api/todos`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -94,7 +96,7 @@ export default function Home() {
   async function saveEdit(id: string) {
     if (!editTitle.trim()) return;
     try {
-      const res = await fetch("/api/todos", {
+      const res = await fetch(`${BASE_URL}/api/todos`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, title: editTitle }),
@@ -134,7 +136,7 @@ export default function Home() {
         <p>Loading...</p>
       ) : (
         <ul className="todo-list">
-          {(todos || []).map((t) => (
+          {todos.map((t) => (
             <li key={t.id}>
               {editId === t.id ? (
                 <>

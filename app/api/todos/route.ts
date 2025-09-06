@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const page = parseInt(url.searchParams.get("page") || "1");
   const limit = 5;
@@ -11,33 +12,33 @@ export async function GET(req: Request) {
     prisma.todo.count(),
   ]);
 
-  return new Response(JSON.stringify({ todos, total, page }));
+  return NextResponse.json({ todos, total, page });
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const { title } = await req.json();
-  if (!title) return new Response(JSON.stringify({ error: "Title required" }), { status: 400 });
+  if (!title) return NextResponse.json({ error: "Title required" }, { status: 400 });
 
   const todo = await prisma.todo.create({ data: { title } });
-  return new Response(JSON.stringify(todo), { status: 201 });
+  return NextResponse.json(todo, { status: 201 });
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: NextRequest) {
   const { id, title, done } = await req.json();
-  if (!id) return new Response(JSON.stringify({ error: "ID required" }), { status: 400 });
+  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
   const data: any = {};
   if (title !== undefined) data.title = title;
   if (done !== undefined) data.done = done;
 
   const updated = await prisma.todo.update({ where: { id }, data });
-  return new Response(JSON.stringify(updated), { status: 200 });
+  return NextResponse.json(updated);
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
-  if (!id) return new Response(JSON.stringify({ error: "ID required" }), { status: 400 });
+  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
   await prisma.todo.delete({ where: { id } });
-  return new Response(JSON.stringify({ message: "Deleted successfully" }), { status: 200 });
+  return NextResponse.json({ message: "Deleted successfully" });
 }
