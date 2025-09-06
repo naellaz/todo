@@ -9,48 +9,48 @@
 
 body, html {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f3f4f6;
+  background-color: #f4f5f7;
   color: #1f2937;
   min-height: 100vh;
 }
 
 /* Container utama */
-.app-body {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-
-/* Main content */
 main.container {
   width: 100%;
   max-width: 700px;
+  margin: 20px auto;
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 28px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: box-shadow 0.3s;
+}
+
+main.container:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 /* Judul */
 h1 {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
   text-align: center;
+  color: #111827;
 }
 
 /* Form tambah todo */
 .todo-form {
   display: flex;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .todo-form input[type="text"] {
   flex: 1;
-  padding: 10px 12px;
+  padding: 12px 16px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 16px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -62,41 +62,54 @@ h1 {
 }
 
 .todo-form button {
-  padding: 10px 16px;
+  padding: 12px 18px;
   background-color: #2563eb;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .todo-form button:hover {
-  background-color: #1e40af;
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
-/* List todo / tabel */
+.todo-form button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Error message */
+.error {
+  color: #b91c1c;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* List todo */
 .todo-list {
   list-style: none;
   width: 100%;
-  border-collapse: collapse;
 }
 
 .todo-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 14px 18px;
+  border-radius: 10px;
   border: 1px solid #e5e7eb;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   background-color: #f9fafb;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .todo-list li:hover {
   background-color: #f3f4f6;
+  transform: translateY(-1px);
 }
 
 .todo-list label {
@@ -111,32 +124,47 @@ h1 {
   color: #6b7280;
 }
 
-/* Tombol hapus */
+/* Tombol action */
 .todo-list button {
   background: none;
   border: none;
   font-size: 18px;
-  color: #ef4444;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.1s;
 }
 
 .todo-list button:hover {
+  transform: scale(1.1);
+}
+
+.todo-list button.delete {
+  color: #ef4444;
+}
+
+.todo-list button.delete:hover {
   color: #b91c1c;
+}
+
+.todo-list button.edit {
+  color: #2563eb;
+}
+
+.todo-list button.edit:hover {
+  color: #1d4ed8;
 }
 
 /* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 24px;
   flex-wrap: wrap;
 }
 
 .pagination button {
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
   background-color: #e5e7eb;
   cursor: pointer;
@@ -150,14 +178,14 @@ h1 {
 
 .pagination button.active {
   background-color: #2563eb;
-  color: white;
+  color: #fff;
   border-color: #2563eb;
 }
 
 /* Responsif */
 @media (max-width: 640px) {
   main.container {
-    padding: 16px;
+    padding: 20px;
   }
 
   .todo-form {
@@ -174,12 +202,8 @@ h1 {
     gap: 8px;
   }
 
-  .pagination {
-    gap: 4px;
-  }
-
   .pagination button {
-    padding: 6px 10px;
+    padding: 6px 12px;
     font-size: 13px;
   }
 }
